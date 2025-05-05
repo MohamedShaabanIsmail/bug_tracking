@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 
 import com.Ashmo.BugTracking.Model.Bugs;
 import com.Ashmo.BugTracking.Service.BugsService;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,9 +25,18 @@ public class BugsController {
     @Autowired
     private BugsService bugsService;
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteBug(@PathVariable int id) {
+        boolean isDeleted = bugsService.deleteBug(id);
+        if (!isDeleted) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().build();
+    }
+    
     @PutMapping("/update")
     public ResponseEntity<Bugs> UpdateBug(@RequestBody Bugs bug) {
-        Bugs bugUpdated = bugsService.createOrUpdateBug(bug);
+        Bugs bugUpdated = bugsService.updateBug(bug);
         if (bugUpdated == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -34,7 +45,7 @@ public class BugsController {
 
     @PostMapping("/create")
     public ResponseEntity<Bugs> CreateNewBug(@RequestBody Bugs bug) {
-        Bugs bugCreated = bugsService.createOrUpdateBug(bug);
+        Bugs bugCreated = bugsService.createBug(bug);
         if (bugCreated == null) {
             return ResponseEntity.badRequest().build();
         }

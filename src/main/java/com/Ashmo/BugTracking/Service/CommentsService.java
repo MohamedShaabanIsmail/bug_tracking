@@ -1,5 +1,6 @@
 package com.Ashmo.BugTracking.Service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ public class CommentsService {
     private CommentsRepo commentRepo;
     
     public Comments createComment(Comments comment) {
+        comment.setCreatedDate(new Date(System.currentTimeMillis()));
         return commentRepo.save(comment);
     }
 
@@ -29,6 +31,10 @@ public class CommentsService {
 
     public List<Comments> getCommentsByBugId(int bugId) {
         return commentRepo.findByBugId(bugId);
+    }
+
+    public Comments getCommentById(int id) {
+        return commentRepo.findById(id).orElse(null);
     }
     
 }
